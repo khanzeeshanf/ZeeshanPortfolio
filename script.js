@@ -1,22 +1,63 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Typewriting Effect
-    const titleElement = document.getElementById('hero-title');
-    const name = "Hi, I'm Zeeshan Khan";
-    let index = 0;
-    titleElement.textContent = ""; // Clear initial state
+    // 1. Reusable Typewriting Effect
+    function typeWriter(element, text, speed = 100) {
+        return new Promise(resolve => {
+            let i = 0;
+            element.textContent = "";
+            element.classList.add('typewriter');
+            element.classList.remove('typewriter-done');
 
-    function typeWriter() {
-        if (index < name.length) {
-            titleElement.textContent += name.charAt(index);
-            index++;
-            setTimeout(typeWriter, 100);
-        } else {
-            titleElement.classList.add('typewriter-done');
-        }
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    element.classList.add('typewriter-done');
+                    resolve();
+                }
+            }
+            type();
+        });
     }
 
-    // Start typing after a short delay
-    setTimeout(typeWriter, 500);
+    // Initial Hero Title Animation
+    const heroTitle = document.getElementById('hero-title');
+    if (heroTitle) {
+        setTimeout(() => {
+            typeWriter(heroTitle, "Hi, I'm Zeeshan Khan");
+        }, 500);
+    }
+
+    // Observer for scroll-triggered typing animations
+    const typingObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.classList.contains('typing-started')) {
+                const el = entry.target;
+                const text = el.getAttribute('data-text');
+                
+                // Prevent re-triggering
+                el.classList.add('typing-started');
+
+                // Special handling for sequential terminal animation
+                if (el.classList.contains('command')) {
+                    typeWriter(el, text, 80).then(() => {
+                        const output = el.closest('.contact-form-dummy').querySelector('.terminal-output');
+                        if (output) {
+                            setTimeout(() => {
+                                typeWriter(output, output.getAttribute('data-text'), 40);
+                            }, 500);
+                        }
+                    });
+                } else if (!el.classList.contains('terminal-output')) {
+                    // Standard headers
+                    typeWriter(el, text, 100);
+                }
+            }
+        });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('.typewriter-trigger').forEach(el => typingObserver.observe(el));
 
     // 2. Scroll Animations (Intersection Observer)
     const observerOptions = {

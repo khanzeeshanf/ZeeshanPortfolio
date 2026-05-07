@@ -192,21 +192,23 @@ main {
     transform: scale(1.1);
 }
 
-.typewriter {
-    font-family: 'Outfit', sans-serif;
+#hero-title {
     font-size: 3.5rem;
     font-weight: 800;
     margin-bottom: 15px;
     min-height: 4.5rem;
-    color: var(--text-primary);
+}
+
+.typewriter {
     border-right: 4px solid var(--accent-primary);
     width: fit-content;
     animation: blink 0.75s step-end infinite;
 }
 
+/* Keep cursor blinking after typing */
 .typewriter.typewriter-done {
-    border-right: none;
-    animation: none;
+    border-right: 4px solid var(--accent-primary);
+    animation: blink 0.75s step-end infinite;
 }
 
 @keyframes blink {
