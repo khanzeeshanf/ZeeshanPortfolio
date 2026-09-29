@@ -440,6 +440,10 @@ main {
     background: linear-gradient(145deg, #55b9a8, #207d7b);
 }
 
+.toolkit-icon {
+    background: linear-gradient(145deg, #6e7f92, #394b62);
+}
+
 .bus-icon {
     background: linear-gradient(145deg, #e4ad47, #bf712d);
 }
